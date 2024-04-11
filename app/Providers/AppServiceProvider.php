@@ -32,6 +32,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
+use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNAdapter;
+use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNClient;
+use League\Flysystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Filesystem;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,6 +50,23 @@ class AppServiceProvider extends ServiceProvider
 		if(config('instance.force_https_urls', true)) {
 			URL::forceScheme('https');
 		}
+
+		Storage::extend('bunnycdn', function ($app, $config) {
+			$adapter = new BunnyCDNAdapter(
+				new BunnyCDNClient(
+					$config['storage_zone'],
+					$config['api_key'],
+					$config['region']
+				),
+				$config['pull_zone']
+			);
+
+			return new FilesystemAdapter(
+				new Filesystem($adapter, $config),
+				$adapter,
+				$config
+			);
+		});
 
 		Schema::defaultStringLength(191);
 		Paginator::useBootstrap();

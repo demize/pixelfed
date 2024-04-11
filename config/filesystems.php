@@ -123,6 +123,15 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'bunnycdn' => [
+            'enabled' => env('BUNNYCDN_ENABLED', false),
+            'driver' => 'bunnycdn',
+            'storage_zone' => env('BUNNYCDN_STORAGE_ZONE'),
+            'api_key' => env('BUNNYCDN_API_KEY'),
+            'region' => env('BUNNYCDN_REGION', \PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNRegion::DEFAULT),
+            'pull_zone' => env('BUNNYCDN_PULL_ZONE'),
+        ],
+
         'backup' => [
             'driver' => env('PF_BACKUP_DRIVER', 's3'),
             'visibility' => 'private',
