@@ -28,6 +28,7 @@ use App\UserFilter;
 use Auth;
 use Horizon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -38,6 +39,10 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Pulse\Facades\Pulse;
 use Illuminate\Http\Request;
 use URL;
+use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNAdapter;
+use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNClient;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Filesystem;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,17 +57,34 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        Schema::defaultStringLength(191);
-        Paginator::useBootstrap();
-        Avatar::observe(AvatarObserver::class);
-        Follower::observe(FollowerObserver::class);
+		Storage::extend('bunnycdn', function ($app, $config) {
+			$adapter = new BunnyCDNAdapter(
+				new BunnyCDNClient(
+					$config['key'],
+					$config['secret'],
+					$config['region']
+				),
+				$config['pull_zone']
+			);
+
+			return new FilesystemAdapter(
+				new Filesystem($adapter, $config),
+				$adapter,
+				$config
+			);
+		});
+
+		Schema::defaultStringLength(191);
+		Paginator::useBootstrap();
+		Avatar::observe(AvatarObserver::class);
+		Follower::observe(FollowerObserver::class);
         HashtagFollow::observe(HashtagFollowObserver::class);
-        Like::observe(LikeObserver::class);
-        Notification::observe(NotificationObserver::class);
-        ModLog::observe(ModLogObserver::class);
-        Profile::observe(ProfileObserver::class);
-        StatusHashtag::observe(StatusHashtagObserver::class);
-        User::observe(UserObserver::class);
+		Like::observe(LikeObserver::class);
+		Notification::observe(NotificationObserver::class);
+		ModLog::observe(ModLogObserver::class);
+		Profile::observe(ProfileObserver::class);
+		StatusHashtag::observe(StatusHashtagObserver::class);
+		User::observe(UserObserver::class);
         Status::observe(StatusObserver::class);
         UserFilter::observe(UserFilterObserver::class);
         Horizon::auth(function ($request) {

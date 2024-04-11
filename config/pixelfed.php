@@ -188,7 +188,7 @@ return [
 	| Store media on object storage like S3, Digital Ocean Spaces, Rackspace
 	|
 	*/
-	'cloud_storage' => env('PF_ENABLE_CLOUD', false),
+	'cloud_storage' => env('PF_ENABLE_CLOUD', true),
 
 	/*
 	|--------------------------------------------------------------------------
