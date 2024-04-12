@@ -27,6 +27,7 @@ use App\{
 	UserFilter
 };
 use Auth, Horizon, URL;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -34,7 +35,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNAdapter;
 use PlatformCommunity\Flysystem\BunnyCDN\BunnyCDNClient;
-use League\Flysystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Filesystem;
 
