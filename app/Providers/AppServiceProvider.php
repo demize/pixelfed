@@ -54,8 +54,8 @@ class AppServiceProvider extends ServiceProvider
 		Storage::extend('bunnycdn', function ($app, $config) {
 			$adapter = new BunnyCDNAdapter(
 				new BunnyCDNClient(
-					$config['storage_zone'],
-					$config['api_key'],
+					$config['key'],
+					$config['secret'],
 					$config['region']
 				),
 				$config['pull_zone']
